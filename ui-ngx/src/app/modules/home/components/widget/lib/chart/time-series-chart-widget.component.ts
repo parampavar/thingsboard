@@ -27,7 +27,10 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { timeSeriesChartKeyDefaultSettings, TimeSeriesChartKeySettings } from '@home/components/widget/lib/chart/time-series-chart.models';
+import {
+  timeSeriesChartKeyDefaultSettings,
+  TimeSeriesChartKeySettings
+} from '@home/components/widget/lib/chart/time-series-chart.models';
 import { WidgetContext } from '@home/models/widget-component.models';
 import { Observable } from 'rxjs';
 import { backgroundStyle, ComponentStyle, overlayStyle, textStyle } from '@shared/models/widget-settings.models';
@@ -70,7 +73,6 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
 
   backgroundStyle$: Observable<ComponentStyle>;
   overlayStyle: ComponentStyle = {};
-  overlayEnabled: boolean;
   padding: string;
 
   legendColumnTitleStyle: ComponentStyle;
@@ -94,8 +96,7 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
 
     this.backgroundStyle$ = backgroundStyle(this.settings.background, this.imagePipe, this.sanitizer);
     this.overlayStyle = overlayStyle(this.settings.background.overlay);
-    this.overlayEnabled = this.settings.background.overlay.enabled;
-    this.padding = this.overlayEnabled ? undefined : this.settings.padding;
+    this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
 
     this.showLegend = this.settings.showLegend;
     if (this.showLegend) {

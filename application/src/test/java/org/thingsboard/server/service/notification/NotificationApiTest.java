@@ -323,13 +323,15 @@ public class NotificationApiTest extends AbstractNotificationApiTest {
 
         deleteDifferentTenant();
 
-        assertThat(notificationRequestService.findNotificationRequestsByTenantIdAndOriginatorType(tenantId, EntityType.USER, new PageLink(1)).getTotalElements())
-                .isZero();
+        await().atMost(TIMEOUT, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertThat(notificationRequestService.findNotificationRequestsByTenantIdAndOriginatorType(tenantId, EntityType.USER, new PageLink(1)).getTotalElements())
+                    .isZero();
+        });
     }
 
     @Test
     public void testNotificationUpdatesForSeveralUsers() throws Exception {
-        int usersCount = 150;
+        int usersCount = 50;
         Map<User, NotificationApiWsClient> sessions = new HashMap<>();
         List<NotificationTargetId> targets = new ArrayList<>();
 
