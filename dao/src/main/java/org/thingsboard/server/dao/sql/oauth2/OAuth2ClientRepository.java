@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import org.thingsboard.server.common.data.oauth2.PlatformType;
 import org.thingsboard.server.dao.model.sql.OAuth2ClientEntity;
 
 import java.util.List;
@@ -48,11 +49,21 @@ public interface OAuth2ClientRepository extends JpaRepository<OAuth2ClientEntity
             "FROM OAuth2ClientEntity c " +
             "LEFT JOIN MobileAppBundleOauth2ClientEntity ac ON c.id = ac.oauth2ClientId " +
             "LEFT JOIN MobileAppBundleEntity b ON ac.mobileAppBundleId = b.id " +
-            "LEFT JOIN MobileAppEntity andApp ON b.androidAppId = andApp.id LEFT JOIN MobileAppEntity iosApp ON b.iosAppID = iosApp.id " +
-            "WHERE andApp.pkgName = :pkgName OR iosApp.pkgName = :pkgName AND b.oauth2Enabled = true " +
+            "LEFT JOIN MobileAppEntity andApp ON b.androidAppId = andApp.id " +
+            "WHERE andApp.pkgName = :pkgName AND b.oauth2Enabled = true " +
             "AND (:platformFilter IS NULL OR c.platforms IS NULL OR c.platforms = '' OR ilike(c.platforms, CONCAT('%', :platformFilter, '%')) = true)")
-    List<OAuth2ClientEntity> findEnabledByPkgNameAndPlatformType(@Param("pkgName") String pkgName,
-                                                                 @Param("platformFilter") String platformFilter);
+    List<OAuth2ClientEntity> findEnabledByAndroidPkgNameAndPlatformType(@Param("pkgName") String pkgName,
+                                                                        @Param("platformFilter") String platformFilter);
+
+    @Query("SELECT c " +
+            "FROM OAuth2ClientEntity c " +
+            "LEFT JOIN MobileAppBundleOauth2ClientEntity ac ON c.id = ac.oauth2ClientId " +
+            "LEFT JOIN MobileAppBundleEntity b ON ac.mobileAppBundleId = b.id " +
+            "LEFT JOIN MobileAppEntity iosApp ON b.iosAppID = iosApp.id " +
+            "WHERE iosApp.pkgName = :pkgName AND b.oauth2Enabled = true " +
+            "AND (:platformFilter IS NULL OR c.platforms IS NULL OR c.platforms = '' OR ilike(c.platforms, CONCAT('%', :platformFilter, '%')) = true)")
+    List<OAuth2ClientEntity> findEnabledByIosPkgNameAndPlatformType(@Param("pkgName") String pkgName,
+                                                                    @Param("platformFilter") String platformFilter);
 
     @Query("SELECT c " +
             "FROM OAuth2ClientEntity c " +
@@ -72,9 +83,10 @@ public interface OAuth2ClientRepository extends JpaRepository<OAuth2ClientEntity
             "LEFT JOIN MobileAppBundleOauth2ClientEntity bc ON bc.mobileAppBundleId = b.id " +
             "LEFT JOIN OAuth2ClientEntity c ON bc.oauth2ClientId = c.id " +
             "WHERE c.id = :clientId " +
-            "AND a.pkgName = :pkgName")
+            "AND a.pkgName = :pkgName and a.platformType = :platformType")
     String findAppSecret(@Param("clientId") UUID id,
-                         @Param("pkgName") String pkgName);
+                         @Param("pkgName") String pkgName,
+                         @Param("platformType") PlatformType platformType);
 
     @Transactional
     @Modifying
