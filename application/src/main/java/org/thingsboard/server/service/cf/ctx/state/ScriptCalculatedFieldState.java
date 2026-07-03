@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
 @NoArgsConstructor
 public class ScriptCalculatedFieldState extends BaseCalculatedFieldState {

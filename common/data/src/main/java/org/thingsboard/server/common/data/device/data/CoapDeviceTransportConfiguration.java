@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class CoapDeviceTransportConfiguration extends PowerSavingConfiguration implements DeviceTransportConfiguration {
 
     private static final long serialVersionUID = 6061442236008925609L;

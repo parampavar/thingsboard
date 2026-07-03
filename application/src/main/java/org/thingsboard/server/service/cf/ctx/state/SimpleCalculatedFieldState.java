@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class SimpleCalculatedFieldState extends BaseCalculatedFieldState {
 
